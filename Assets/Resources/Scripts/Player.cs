@@ -28,19 +28,19 @@ namespace FloatBall
         {
             locX = transform.position.x;
             locY = transform.position.y;
+
+            Vector3 playerpos = transform.position;
+            Vector3 target = Input.mousePosition - Camera.main.WorldToScreenPoint(playerpos);
             
 
-            //Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-            //direction.z = 0f;
-
-            //transform.Translate(direction);
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 playerpos = transform.position;
                 Debug.Log("player's position is " + playerpos.ToString());
-                Vector3 target = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-                target.z = 0f;
+
                 target = target.normalized;
+                target.z = 0f;
+                //transform.up = target;
+
                 gun.Shot(playerpos, target);
             }
             
