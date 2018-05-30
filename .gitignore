@@ -4,3 +4,4 @@ Temp/
 obj/
 *.csproj
 *.sln
+*.log
