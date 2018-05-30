@@ -8,7 +8,19 @@ namespace FloatBall
     {
 
         public float speed = 10f;
-        //Vector3 direction;
+        Vector3 direction;
+
+        public Vector3 Direction
+        {
+            get
+            {
+                return direction;
+            }
+            set
+            {
+                direction = value;
+            }
+        }
 
         // Use this for initialization
         void Start()
@@ -19,13 +31,14 @@ namespace FloatBall
         // Update is called once per frame
         void Update()
         {
-            transform.Translate(transform.position * Time.deltaTime * speed);
+            transform.Translate(direction * Time.deltaTime * speed);
             if (Findborder())
             {
                 Destroy(gameObject);
             }
         }
 
+        //检测子弹是否到达游戏边界
         bool Findborder()
         {
             float locx = transform.position.x;
