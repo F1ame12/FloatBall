@@ -31,19 +31,19 @@ namespace FloatBall
             float locx = transform.position.x;
             float locy = transform.position.y;
             GameObject itself = gameObject;
-            if (locy >= GameManager.GameBorderUp)
+            if (locy > GameManager.GameBorderUp)
             {
                 return true;
             }
-            if (locy <= GameManager.GameBorderDown)
+            if (locy < GameManager.GameBorderDown)
             {
                 return true;
             }
-            if (locx <= GameManager.GameBorderLeft)
+            if (locx < GameManager.GameBorderLeft)
             {
                 return true;
             }
-            if (locx >= GameManager.GameBorderRight)
+            if (locx > GameManager.GameBorderRight)
             {
                 return true;
             }
