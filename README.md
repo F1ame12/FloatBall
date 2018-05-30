@@ -54,5 +54,3 @@
 
 youngniu:
 test push
-
-test 2222
