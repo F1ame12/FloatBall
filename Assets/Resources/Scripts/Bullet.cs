@@ -6,7 +6,7 @@ namespace FloatBall
 {
     public class Bullet : MonoBehaviour
     {
-        
+        ScoreRecorder scorerecorder;
         float speed = 5.0f;
         Vector3 direction;
 
@@ -25,7 +25,7 @@ namespace FloatBall
         // Use this for initialization
         void Start()
         {
-
+            scorerecorder = GameObject.Find("Main Camera").GetComponent<ScoreRecorder>();
         }
 
         // Update is called once per frame
@@ -41,10 +41,12 @@ namespace FloatBall
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Debug.Log("Get Animy!");
-            if (collision.gameObject.name.Equals("player2"))
+            
+            if (collision.gameObject.tag.Equals("enemy"))
             {
-                GameObject.Find("Main Camera").GetComponent<ScoreRecorder>().Killnum += 1;
+                Debug.Log("Get Enemy!");
+                scorerecorder.Killnum += 1;
+                collision.gameObject.transform.localScale += new Vector3(0.1f,0.1f,0.1f);
                 Destroy(gameObject);
             }
         }
