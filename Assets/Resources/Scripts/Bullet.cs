@@ -6,49 +6,51 @@ namespace FloatBall
 {
     public class Bullet : MonoBehaviour
     {
+        ScoreRecorder scorerecorder;
+        float speed = 5.0f;
+        Vector3 direction;
 
-        public float speed = 10f;
-        //Vector3 direction;
+        public Vector3 Direction
+        {
+            get
+            {
+                return direction;
+            }
+            set
+            {
+                direction = value;
+            }
+        }
 
         // Use this for initialization
         void Start()
         {
-
+            scorerecorder = GameObject.Find("Main Camera").GetComponent<ScoreRecorder>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            transform.Translate(transform.position * Time.deltaTime * speed);
-            if (Findborder())
+            transform.Translate(direction * Time.deltaTime * speed);
+            // 到达边界销毁此对象
+            if (BorderInspector.Onborder(gameObject.transform.position))
             {
                 Destroy(gameObject);
             }
         }
 
-        bool Findborder()
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            float locx = transform.position.x;
-            float locy = transform.position.y;
-            GameObject itself = gameObject;
-            if (locy > GameManager.GameBorderUp)
+            
+            if (collision.gameObject.tag.Equals("enemy"))
             {
-                return true;
+                Debug.Log("Get Enemy!");
+                scorerecorder.Killnum += 1;
+                collision.gameObject.transform.localScale += new Vector3(0.1f,0.1f,0.1f);
+                Destroy(gameObject);
             }
-            if (locy < GameManager.GameBorderDown)
-            {
-                return true;
-            }
-            if (locx < GameManager.GameBorderLeft)
-            {
-                return true;
-            }
-            if (locx > GameManager.GameBorderRight)
-            {
-                return true;
-            }
-            return false;
         }
+
     }
 }
 
