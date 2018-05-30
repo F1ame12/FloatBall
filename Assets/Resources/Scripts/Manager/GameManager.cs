@@ -7,7 +7,6 @@ namespace FloatBall
     public class GameManager : SingletonUnity<GameManager>
     {
 
-
         private void Start()
         {
             

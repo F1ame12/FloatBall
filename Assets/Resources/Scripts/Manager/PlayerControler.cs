@@ -34,7 +34,7 @@ namespace FloatBall
             Vector3 target = mousepos - Camera.main.WorldToScreenPoint(playerpos);
 
             //左键朝目标方向射击
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("player's position is " + playerpos.ToString());
                 target = target.normalized;

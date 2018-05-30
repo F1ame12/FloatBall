@@ -6,7 +6,7 @@ namespace FloatBall
 {
     public class Bullet : MonoBehaviour
     {
-
+        
         float speed = 5.0f;
         Vector3 direction;
 
@@ -39,6 +39,15 @@ namespace FloatBall
             }
         }
 
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            Debug.Log("Get Animy!");
+            if (collision.gameObject.name.Equals("player2"))
+            {
+                GameObject.Find("Main Camera").GetComponent<ScoreRecorder>().Killnum += 1;
+                Destroy(gameObject);
+            }
+        }
 
     }
 }
