@@ -7,29 +7,19 @@ namespace FloatBall
     public class EnemySpawner : MonoBehaviour
     {
         bool ismoving;
-        float timecount;
+        float createWaitTime;
         float speed;
         Vector3 movetarget;
         GameObject player;
-        
-        public bool IsMoving
-        {
-            get
-            {
-                return ismoving;
-            }
-            set
-            {
-                ismoving = value;
-            }
-        }
+        EnemyControler enemyControl;
 
         void Start()
         {
             ismoving = false;
-            timecount = 0f;
+            createWaitTime = 0f;
             speed = 2.0f;
             player = GameObject.FindGameObjectWithTag("Player");
+            enemyControl = GameObject.Find("Main Camera").GetComponent<EnemyControler>();
         }
 
         // Update is called once per frame
@@ -37,15 +27,6 @@ namespace FloatBall
         {
             ChangePos();
             //CircleAnimation();
-            if (timecount < 5)
-            {
-                timecount += Time.deltaTime;
-            }
-            else
-            {
-                timecount = 0;
-                CreateEnemy();
-            }
         }
 
         void ChangePos()
@@ -70,16 +51,21 @@ namespace FloatBall
             }
         }
 
-        void CreateEnemy()
+        public void CreateEnemy(GameObject enemy_prefab)
         {
-            //GameObject enemy = GameObject.Instantiate(enemy_prefab, transform.position, Quaternion.identity);
+            if (createWaitTime < 5)
+            {
+                createWaitTime += Time.deltaTime;
+            }
+            else if (enemyControl.EnemyNum < enemyControl.MaxEnemyNum)
+            {
+                createWaitTime = 0;
+                GameObject enemy = GameObject.Instantiate(enemy_prefab, transform.position, Quaternion.identity);
+                enemyControl.AddEnemy(enemy);
+            }
+            
         }
 
-
-        void CircleAnimation()
-        {
-            transform.Rotate(0f, 0f, 10f);
-        }
     }
 }
 

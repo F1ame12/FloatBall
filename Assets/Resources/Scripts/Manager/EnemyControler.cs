@@ -6,15 +6,49 @@ namespace FloatBall
 {
     public class EnemyControler : SingletonUnity<EnemyControler>
     {
+        int enemyMaxNum;
+        int enemySpawnerMaxNum;
         GameObject enemy_prefab;
         GameObject enemySpawner_prefab;
+        DataRecorder datarecorder;
         List<GameObject> enemyList;
         List<GameObject> enemySpawnerList;
-        // Use this for initialization
+        
+        public int MaxEnemyNum
+        {
+            get
+            {
+                return enemyMaxNum;
+            }
+            set
+            {
+                enemyMaxNum = value;
+            }
+        }
+
+        public int EnemyNum
+        {
+            get
+            {
+                return enemyList.Count;
+            }
+        }
+
+        public int EnemySpawerNum
+        {
+            get
+            {
+                return enemySpawnerList.Count;
+            }
+        }
+
         void Start()
         {
+            enemyMaxNum = 15;
+            enemySpawnerMaxNum = 5;
             enemy_prefab = Resources.Load<GameObject>("prefab/Enemy");
             enemySpawner_prefab = Resources.Load<GameObject>("prefab/EnemySpawner");
+            datarecorder = gameObject.GetComponent<DataRecorder>();
             enemyList = new List<GameObject>();
             enemySpawnerList = new List<GameObject>();
 
@@ -24,8 +58,27 @@ namespace FloatBall
         // Update is called once per frame
         void Update()
         {
-            
+            CreateEnemy();
+            datarecorder.EnemyNum = EnemyNum;
         }
+
+        private void CreateEnemy()
+        {
+            if (enemyList.Count != enemyMaxNum)
+            {
+                foreach(GameObject i in enemySpawnerList)
+                {
+                    EnemySpawner enemySpawner = i.GetComponent<EnemySpawner>();
+                    enemySpawner.CreateEnemy(enemy_prefab);
+                }
+            }
+        }
+
+        public void AddEnemy(GameObject enemy)
+        {
+            enemyList.Add(enemy);
+        }
+
 
         public bool DestoryEnemy(GameObject gameObject)
         {

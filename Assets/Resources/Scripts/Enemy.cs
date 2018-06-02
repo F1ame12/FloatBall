@@ -20,18 +20,6 @@ namespace FloatBall
         Vector3 targetpos;
         GameObject playerobj;
 
-        public bool IsMoving
-        {
-            get
-            {
-                return ismoving;
-            }
-            set
-            {
-                ismoving = value;
-            }
-        }
-
         public float Speed
         {
             get

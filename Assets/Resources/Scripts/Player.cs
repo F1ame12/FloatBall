@@ -23,11 +23,23 @@ namespace FloatBall
                 this.speed = value;
             }
         }
-        
 
-        
+        public void OnMyTrigger(string type, Collider2D collider)
+        {
+            if (type != null && type.Equals("Touched"))
+            {
+                CircleCollider2D other = collider as CircleCollider2D;
+                if (other.gameObject.tag.Equals("Bullet"))
+                {
+                    if (other.gameObject.GetComponent<SpriteRenderer>().color == Color.red)
+                    {
+                        Debug.Log("Player:  Get Hurt!");
+                        Destroy(other.gameObject);
+                    }
+                }
+            }
+        }
 
-        
     }
 
 }
