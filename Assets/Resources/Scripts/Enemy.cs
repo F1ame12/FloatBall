@@ -6,81 +6,149 @@ namespace FloatBall
 {
     public class Enemy : MonoBehaviour
     {
-
-        ShootControl gun = new ShootControl();
-        bool canshot = false;
-        float timecount = 0;
-        float speed = 3f;
+        //Status status;
+        DataRecorder dataRecorder;
+        EnemyControler enemyControl;
+        ShootControler enemyGun;
+        bool ismoving;
+        bool canshot;
+        float shotWaitTime;
+        float timecount;
+        float speed;
+        Vector3 movetarget;
         Vector3 playerpos;
-        GameObject player;
-        // Use this for initialization
+        Vector3 targetpos;
+        GameObject playerobj;
+
+        public bool IsMoving
+        {
+            get
+            {
+                return ismoving;
+            }
+            set
+            {
+                ismoving = value;
+            }
+        }
+
+        public float Speed
+        {
+            get
+            {
+                return speed;
+            }
+            set
+            {
+                speed = value;
+            }
+        }
+
         void Start()
         {
-            player = GameObject.Find("player").gameObject;
+            //status = Status.Normal;
+            ismoving = false;
+            canshot = false;
+            shotWaitTime = 1.5f;
+            timecount = 0f;
+            speed = 2.5f;
+            enemyControl = GameObject.Find("Main Camera").GetComponent<EnemyControler>();
+            dataRecorder = GameObject.Find("Main Camera").GetComponent<DataRecorder>();
+            playerobj = GameObject.FindGameObjectWithTag("Player");
+            enemyGun = gameObject.GetComponent<ShootControler>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            playerpos = player.transform.position;
+            ChangePos();
+            ShotWaitTime();
+            
+        }
+
+        void ShotWaitTime()
+        {
             if (canshot)
             {
                 timecount += Time.deltaTime;
             }
-            
-            transform.Translate((playerpos - transform.position).normalized * Time.deltaTime * speed);
         }
 
-        private void OnTriggerExit2D(Collider2D collision)
+        void ChangePos()
         {
-            CircleCollider2D circle = collision as CircleCollider2D;
-            if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
+            if (ismoving == false)
             {
-                Debug.Log("Enemy:   Player Out of Range!");
-                canshot = false;
+                movetarget = EnemyControler.RandomPos();
+                ismoving = true;
             }
-            else if (circle.gameObject.tag.Equals("Bullet"))
+            else if (ismoving == true)
             {
-                int chance = Random.Range(0, 1);
-                if (chance == 1)
-                {
 
+                if (Mathf.Abs(movetarget.x - transform.position.x) <= 0.1f)
+                {
+                    Debug.Log("AI-SPAWNER is Arrived");
+                    ismoving = false;
+                }
+                else
+                {
+                    transform.Translate((movetarget - transform.position).normalized * Time.deltaTime * speed);
                 }
             }
-
         }
 
-        private void OnTriggerStay2D(Collider2D collision)
-        {
-            
-            CircleCollider2D circle = collision as CircleCollider2D;
-            targetpos = collision.gameObject.transform.position;
-            canshot = true;
-            if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
-            {
-                Debug.Log("Enemy:   Player in Range!");
-                if (canshot && timecount > 0.5)
-                {
-                    Debug.Log("Enemy:   Shot to Player!");
-                    timecount = 0;
-                    ShotToPlayer();
-                    
-                }
-                
-            }
-            
-        }
-        Vector3 targetpos;
         void ShotToPlayer()
         {
             Vector3 target = targetpos - transform.position;
             target.z = 0f;
-            gun.Color = "red";
-            gun.Shot(transform.position, target.normalized);
+            enemyGun.Color = "red";
+            enemyGun.Shot(transform.position, target.normalized);
         }
 
-      
+        public void OnMyTrigger(string type, Collider2D collision)
+        {
+            if (type != null && type.Equals("FindPlayer"))
+            {
+                CircleCollider2D other = collision as CircleCollider2D;
+                targetpos = collision.gameObject.transform.position;
+                canshot = true;
+                if (other.gameObject.tag.Equals("Player"))
+                {
+                    Debug.Log("Enemy:   Player in Range!");
+                    if (canshot && timecount > shotWaitTime)
+                    {
+                        Debug.Log("Enemy:   Shot to Player!");
+                        timecount = 0;
+                        ShotToPlayer();
+                    }
+                }
+            }
 
+            if (type != null && type.Equals("NotFindPlayer"))
+            {
+                CircleCollider2D other = collision as CircleCollider2D;
+                if (other.gameObject.tag.Equals("Player"))
+                {
+                    Debug.Log("Enemy:   Player Out of Range!");
+                    canshot = false;
+                }
+            }
+
+            if (type != null && type.Equals("Touched"))
+            {
+                CircleCollider2D other = collision as CircleCollider2D;
+                if (other.gameObject.tag.Equals("Bullet") && other.gameObject.GetComponent<SpriteRenderer>().color == Color.white)
+                {
+                    Debug.Log("Enemy:   Killed By Player!");
+                    Destroy(other.gameObject);
+                    if (enemyControl.DestoryEnemy(gameObject))
+                    {
+                        Destroy(gameObject);
+                    }
+                    dataRecorder.Killnum += 1;
+                }
+            }
+        }
+   
     }
 }
 

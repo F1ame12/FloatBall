@@ -6,9 +6,9 @@ namespace FloatBall
 {
     public class Bullet : MonoBehaviour
     {
-        ScoreRecorder scorerecorder;
-
-        float speed = 5.0f;
+        DataRecorder datarecorder;
+        Color color;
+        float speed = 7f;
         Vector3 direction;
 
         public Vector3 Direction
@@ -38,7 +38,8 @@ namespace FloatBall
         // Use this for initialization
         void Start()
         {
-            scorerecorder = GameObject.Find("Main Camera").GetComponent<ScoreRecorder>();
+            datarecorder = GameObject.Find("Main Camera").GetComponent<DataRecorder>();
+            color = gameObject.GetComponent<SpriteRenderer>().color;
         }
 
         // Update is called once per frame
@@ -52,27 +53,22 @@ namespace FloatBall
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D collider)
         {
-            CircleCollider2D circle = collision as CircleCollider2D;
-            if (circle.gameObject.tag.Equals("Enemy") && circle.radius == 0.25)
+            CircleCollider2D other = collider as CircleCollider2D;
+            if (other.gameObject.tag.Equals("Enemy") && other.radius == 0.25)
             {
-                if (gameObject.GetComponent<SpriteRenderer>().color == Color.white)
+                if (color == Color.white)
                 {
-                    
-                    Debug.Log("Bullet:  Hit Enemy!");
-                    scorerecorder.Killnum += 1;
-                    Destroy(circle.gameObject);
                     Destroy(gameObject);
                 }
  
             }
-            else if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
+            else if (other.gameObject.tag.Equals("Player") && other.radius == 0.25)
             {
-                if (gameObject.GetComponent<SpriteRenderer>().color == Color.red)
+                if (color == Color.red)
                 {
                     Debug.Log("Bullet:  Hit Player!");
-
                     Destroy(gameObject);
                 }
                 

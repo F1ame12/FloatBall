@@ -16,9 +16,9 @@ namespace FloatBall
             }
             set
             {
-                if (value < 0)
+                if (value < 0f)
                 {
-                    this.speed = 0;
+                    this.speed = 0f;
                 }
                 this.speed = value;
             }
