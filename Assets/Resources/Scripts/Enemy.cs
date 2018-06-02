@@ -9,46 +9,69 @@ namespace FloatBall
 
         ShootControl gun = new ShootControl();
         bool canshot = false;
+        float timecount = 0;
+        float speed = 2f;
+        Vector3 playerpos;
+        GameObject player;
         // Use this for initialization
         void Start()
         {
-
+            player = GameObject.Find("player").gameObject;
         }
 
         // Update is called once per frame
         void Update()
         {
-
-        }
-
-        private void FixedUpdate()
-        {
+            playerpos = player.transform.position;
             if (canshot)
             {
-                canshot = false;
+                timecount += Time.deltaTime;
             }
-            else
-            {
-                canshot = true;
-            }
+            
+            transform.Translate((playerpos - transform.position).normalized * Time.deltaTime * speed);
         }
 
-        private void OnTriggerStay2D(Collider2D collider)
+        private void OnTriggerExit2D(Collider2D collision)
         {
-            if (!canshot)
+            CircleCollider2D circle = collision as CircleCollider2D;
+            if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
             {
-                return;
+                Debug.Log("Not Find Player!");
+                canshot = false;
             }
-            CircleCollider2D circle = collider as CircleCollider2D;
+
+        }
+
+        private void OnTriggerStay2D(Collider2D collision)
+        {
+            
+            CircleCollider2D circle = collision as CircleCollider2D;
+            targetpos = collision.gameObject.transform.position;
+            canshot = true;
             if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
             {
                 Debug.Log("Find Player!");
-                Vector3 target = collider.gameObject.transform.position - transform.position;
-                target.z = 0f;
-                gun.Color = "red";
-                gun.Shot(transform.position, target.normalized);
+                if (canshot && timecount > 0.5)
+                {
+                    Debug.Log("Start Shot to Player!");
+                    timecount = 0;
+                    ShotToPlayer();
+                    
+                }
+                
             }
+            
         }
+        Vector3 targetpos;
+        void ShotToPlayer()
+        {
+            Vector3 target = targetpos - transform.position;
+            target.z = 0f;
+            gun.Color = "red";
+            gun.Shot(transform.position, target.normalized);
+        }
+
+      
 
     }
 }

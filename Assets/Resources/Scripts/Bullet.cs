@@ -57,11 +57,12 @@ namespace FloatBall
             CircleCollider2D circle = collision as CircleCollider2D;
             if (circle.gameObject.tag.Equals("Enemy") && circle.radius == 0.25)
             {
-                if (gameObject.GetComponent<SpriteRenderer>().color != Color.red)
+                if (gameObject.GetComponent<SpriteRenderer>().color == Color.white)
                 {
                     
                     Debug.Log("Hit Enemy!");
                     scorerecorder.Killnum += 1;
+                    Destroy(circle.gameObject);
                     Destroy(gameObject);
                 }
  
@@ -71,6 +72,7 @@ namespace FloatBall
                 if (gameObject.GetComponent<SpriteRenderer>().color == Color.red)
                 {
                     Debug.Log("Hit Player!");
+
                     Destroy(gameObject);
                 }
                 
