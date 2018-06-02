@@ -60,7 +60,7 @@ namespace FloatBall
                 if (gameObject.GetComponent<SpriteRenderer>().color == Color.white)
                 {
                     
-                    Debug.Log("Hit Enemy!");
+                    Debug.Log("Bullet:  Hit Enemy!");
                     scorerecorder.Killnum += 1;
                     Destroy(circle.gameObject);
                     Destroy(gameObject);
@@ -71,7 +71,7 @@ namespace FloatBall
             {
                 if (gameObject.GetComponent<SpriteRenderer>().color == Color.red)
                 {
-                    Debug.Log("Hit Player!");
+                    Debug.Log("Bullet:  Hit Player!");
 
                     Destroy(gameObject);
                 }

@@ -10,7 +10,7 @@ namespace FloatBall
         ShootControl gun = new ShootControl();
         bool canshot = false;
         float timecount = 0;
-        float speed = 2f;
+        float speed = 3f;
         Vector3 playerpos;
         GameObject player;
         // Use this for initialization
@@ -36,8 +36,16 @@ namespace FloatBall
             CircleCollider2D circle = collision as CircleCollider2D;
             if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
             {
-                Debug.Log("Not Find Player!");
+                Debug.Log("Enemy:   Player Out of Range!");
                 canshot = false;
+            }
+            else if (circle.gameObject.tag.Equals("Bullet"))
+            {
+                int chance = Random.Range(0, 1);
+                if (chance == 1)
+                {
+
+                }
             }
 
         }
@@ -50,10 +58,10 @@ namespace FloatBall
             canshot = true;
             if (circle.gameObject.tag.Equals("Player") && circle.radius == 0.25)
             {
-                Debug.Log("Find Player!");
+                Debug.Log("Enemy:   Player in Range!");
                 if (canshot && timecount > 0.5)
                 {
-                    Debug.Log("Start Shot to Player!");
+                    Debug.Log("Enemy:   Shot to Player!");
                     timecount = 0;
                     ShotToPlayer();
                     

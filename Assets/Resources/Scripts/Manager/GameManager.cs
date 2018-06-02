@@ -12,6 +12,10 @@ namespace FloatBall
             
         }
 
+        private void Update()
+        {
+            
+        }
 
     }
 }

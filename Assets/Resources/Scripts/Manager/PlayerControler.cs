@@ -9,10 +9,13 @@ namespace FloatBall
         //float locX;
         //float locY;
         float speed;
+        float timecount = 0f;
+        bool canshot;
         ShootControl gun;
         // Use this for initialization
         void Start()
         {
+            canshot = true;
             gun = new ShootControl();
             speed = gameObject.GetComponent<Player>().Speed;
         }
@@ -21,6 +24,17 @@ namespace FloatBall
         void Update()
         {
             Move();
+            if (timecount < 0.5 && canshot == false)
+            {
+                timecount += Time.deltaTime;
+            }
+            else if (timecount > 0.5)
+            {
+                Debug.Log("Player Can shot Now");
+                canshot = true;
+                timecount = 0;
+            }
+            
         }
 
         private void Move()
@@ -34,9 +48,10 @@ namespace FloatBall
             Vector3 target = mousepos - Camera.main.WorldToScreenPoint(playerpos);
 
             //左键朝目标方向射击
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && canshot)
             {
-                Debug.Log("player's position is " + playerpos.ToString());
+                canshot = false;
+                //Debug.Log("player's position is " + playerpos.ToString());
                 target = target.normalized;
                 target.z = 0f;
                 gun.Shot(playerpos, target);
@@ -46,22 +61,22 @@ namespace FloatBall
 
             if (Input.GetKey(KeyCode.W) && !BorderInspector.OnUpBorder(playerpos))
             {
-                Debug.Log("up!");
+                //Debug.Log("up!");
                 transform.Translate(Vector3.up * Time.deltaTime * speed);
             }
             if (Input.GetKey(KeyCode.S) && !BorderInspector.OnDownBorder(playerpos))
             {
-                Debug.Log("down!");
+                //Debug.Log("down!");
                 transform.Translate(Vector3.down * Time.deltaTime * speed);
             }
             if (Input.GetKey(KeyCode.A) && !BorderInspector.OnLeftBorder(playerpos))
             {
-                Debug.Log("left!");
+                //Debug.Log("left!");
                 transform.Translate(Vector3.left * Time.deltaTime * speed);
             }
             if (Input.GetKey(KeyCode.D) && !BorderInspector.OnDownBorder(playerpos))
             {
-                Debug.Log("right");
+                //Debug.Log("right");
                 transform.Translate(Vector3.right * Time.deltaTime * speed);
             }
         }
