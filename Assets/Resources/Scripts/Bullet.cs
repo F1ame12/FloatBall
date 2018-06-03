@@ -6,8 +6,9 @@ namespace FloatBall
 {
     public class Bullet : MonoBehaviour
     {
-        ScoreRecorder scorerecorder;
-        float speed = 5.0f;
+        DataRecorder datarecorder;
+        Color color;
+        float speed = 5f;
         Vector3 direction;
 
         public Vector3 Direction
@@ -21,32 +22,36 @@ namespace FloatBall
                 direction = value;
             }
         }
-
-        // Use this for initialization
-        void Start()
+        
+        public float Speed
         {
-            scorerecorder = GameObject.Find("Main Camera").GetComponent<ScoreRecorder>();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            transform.Translate(direction * Time.deltaTime * speed);
-            // 到达边界销毁此对象
-            if (BorderInspector.Onborder(gameObject.transform.position))
+            get
             {
-                Destroy(gameObject);
+                return speed;
+            }
+            set
+            {
+                this.speed = value;
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        void Start()
         {
-            
-            if (collision.gameObject.tag.Equals("enemy"))
+            datarecorder = GameObject.Find("Main Camera").GetComponent<DataRecorder>();
+            color = gameObject.GetComponent<SpriteRenderer>().color;
+        }
+
+        void Update()
+        {
+            transform.Translate(direction * Time.deltaTime * speed);
+            DestroyOverBorder();
+        }
+
+        // 到达边界销毁此对象
+        private void DestroyOverBorder()
+        {
+            if (BorderInspector.Onborder(gameObject.transform.position))
             {
-                Debug.Log("Get Enemy!");
-                scorerecorder.Killnum += 1;
-                collision.gameObject.transform.localScale += new Vector3(0.1f,0.1f,0.1f);
                 Destroy(gameObject);
             }
         }
