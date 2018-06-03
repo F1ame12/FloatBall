@@ -8,7 +8,7 @@ namespace FloatBall
     {
         DataRecorder datarecorder;
         Color color;
-        float speed = 7f;
+        float speed = 5f;
         Vector3 direction;
 
         public Vector3 Direction

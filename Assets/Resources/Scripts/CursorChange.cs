@@ -8,6 +8,7 @@ public class CursorChange : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
        Cursor.SetCursor(cursor, new Vector2(24f ,24f), CursorMode.Auto);
+       
     }
 
 }

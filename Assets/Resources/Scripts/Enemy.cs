@@ -36,9 +36,6 @@ namespace FloatBall
         {
             //status = Status.Normal;
             ismoving = false;
-            canshot = false;
-            shotWaitTime = 1.5f;
-            timecount = 0f;
             speed = 2.5f;
             enemyControl = GameObject.Find("Main Camera").GetComponent<EnemyControler>();
             dataRecorder = GameObject.Find("Main Camera").GetComponent<DataRecorder>();
@@ -50,18 +47,11 @@ namespace FloatBall
         void Update()
         {
             ChangePos();
-            ShotWaitTime();
-            
         }
 
-        void ShotWaitTime()
-        {
-            if (canshot)
-            {
-                timecount += Time.deltaTime;
-            }
-        }
 
+
+        // 随机改变位置
         void ChangePos()
         {
             if (ismoving == false)
@@ -84,14 +74,17 @@ namespace FloatBall
             }
         }
 
+        // 向玩家射击
         void ShotToPlayer()
         {
             Vector3 target = targetpos - transform.position;
             target.z = 0f;
-            enemyGun.Color = "red";
+            enemyGun.ShotCd = 1.5f;
+            enemyGun.BulletColor = "red";
             enemyGun.Shot(transform.position, target.normalized);
         }
 
+        // 鉴别触发器
         public void OnMyTrigger(string type, Collider2D collision)
         {
             if (type != null && type.Equals("FindPlayer"))
@@ -102,12 +95,8 @@ namespace FloatBall
                 if (other.gameObject.tag.Equals("Player"))
                 {
                     Debug.Log("Enemy:   Player in Range!");
-                    if (canshot && timecount > shotWaitTime)
-                    {
-                        Debug.Log("Enemy:   Shot to Player!");
-                        timecount = 0;
-                        ShotToPlayer();
-                    }
+                    Debug.Log("Enemy:   Shot to Player!");
+                    ShotToPlayer();
                 }
             }
 
@@ -128,14 +117,15 @@ namespace FloatBall
                 {
                     Debug.Log("Enemy:   Killed By Player!");
                     Destroy(other.gameObject);
-                    if (enemyControl.DestoryEnemy(gameObject))
-                    {
-                        Destroy(gameObject);
-                    }
                     dataRecorder.Killnum += 1;
+                    enemyControl.DestoryEnemy(gameObject);
                 }
             }
         }
+
+
+
+
    
     }
 }

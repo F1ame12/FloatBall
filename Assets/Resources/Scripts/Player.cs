@@ -6,7 +6,9 @@ namespace FloatBall
 {
     public class Player : MonoBehaviour
     {
+        int lifeCount;
         float speed = 5f;
+        DataRecorder datarecorder;
         
         public float Speed
         {
@@ -24,6 +26,25 @@ namespace FloatBall
             }
         }
 
+        public int LifeCount
+        {
+            get
+            {
+                return lifeCount;
+            }
+            set
+            {
+                lifeCount = value;
+            }
+        }
+
+        private void Start()
+        {
+            lifeCount = 10;
+            datarecorder = GameObject.Find("Main Camera").GetComponent<DataRecorder>();
+            datarecorder.LifeCount = lifeCount;
+        }
+
         public void OnMyTrigger(string type, Collider2D collider)
         {
             if (type != null && type.Equals("Touched"))
@@ -35,6 +56,20 @@ namespace FloatBall
                     {
                         Debug.Log("Player:  Get Hurt!");
                         Destroy(other.gameObject);
+                        if (lifeCount-1 == 0)
+                        {
+                            datarecorder.OpenData = false;
+
+                            //Time.timeScale = 0;
+                            Cursor.SetCursor(null, new Vector2(0f, 0f), CursorMode.Auto);
+                            GameObject.Find("FailMenu").GetComponent<FailMenuScript>().ShowFailMenu();
+                        }
+                        else
+                        {
+                            lifeCount--;
+                            datarecorder.LifeCount--;
+                        }
+                        
                     }
                 }
             }

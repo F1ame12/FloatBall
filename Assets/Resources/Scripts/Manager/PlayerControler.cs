@@ -8,13 +8,13 @@ namespace FloatBall
     {
 
         float playerspeed;
-        float timecount = 0f;
-        bool canshot;
+        //float timecount = 0f;
+        //bool canshot;
         ShootControler playergun;
 
         void Start()
         {
-            canshot = true;
+            //canshot = true;
             playergun = gameObject.GetComponent<ShootControler>();
             playerspeed = gameObject.GetComponent<Player>().Speed;
         }
@@ -47,12 +47,13 @@ namespace FloatBall
             Vector3 target = mousepos - Camera.main.WorldToScreenPoint(playerpos);
 
             //左键朝目标方向射击
-            if (Input.GetMouseButtonDown(0) /*&& canshot*/)
+            if (Input.GetMouseButtonDown(0))
             {
                 //canshot = false;
                 //Debug.Log("player's position is " + playerpos.ToString());
                 target = target.normalized;
                 target.z = 0f;
+                //playergun.ShotCd = 1.5f;
                 playergun.Shot(playerpos, target);
             }
 

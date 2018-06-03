@@ -6,30 +6,74 @@ namespace FloatBall
 {
     public class ShootControler : SingletonUnity<ShootControler>
     {
-        string color = null;
+        string bulletColor;
+        float shotCd;
+        bool canShot;
+        float shotWaitTime;
         GameObject bullet_prefab;
 
-        public string Color
+        public string BulletColor
         {
             set
             {
-                color = value;
+                bulletColor = value;
             }
         }
+
+        public float ShotCd
+        {
+            get
+            {
+                return shotCd;
+            }
+            set
+            {
+                shotCd = value;
+            }
+        }
+
 
         private void Start()
         {
             bullet_prefab = Resources.Load<GameObject>("prefab/Bullet");
+            shotCd = 0.0f;
+            shotWaitTime = 0.0f;
+            canShot = true;
+        }
+
+        private void Update()
+        {
+            ShotWaitTime();
+        }
+
+        void ShotWaitTime()
+        {
+            if (shotWaitTime < shotCd)
+            {
+                shotWaitTime += Time.deltaTime;
+            }
+            else
+            {
+                shotWaitTime = 0f;
+                canShot = true;
+            }
         }
 
         public void Shot(Vector3 from, Vector3 target)
         {
-            GameObject bullet = GameObject.Instantiate(bullet_prefab, from, Quaternion.identity);
-            if (color != null && color.Equals("red"))
+            if (canShot)
             {
-                bullet.GetComponent<SpriteRenderer>().color = UnityEngine.Color.red;
+                GameObject bullet = GameObject.Instantiate(bullet_prefab, from, Quaternion.identity);
+                bullet.GetComponent<Bullet>().Direction = target;
+                if (bulletColor != null && bulletColor.Equals("red"))
+                {
+                    bullet.GetComponent<SpriteRenderer>().color = UnityEngine.Color.red;
+                }
+
+                canShot = false;
             }
-            bullet.GetComponent<Bullet>().Direction = target;
+            
+            
         }
     }
 }
